@@ -33,6 +33,8 @@ export type Invite = {
 };
 
 export const LIMITS = {
+  /** Guest's own name, typed on the shared links. */
+  name: 80,
   message: 500,
   companionName: 80,
   /** Hard ceiling regardless of what the Sheet says. */
@@ -47,18 +49,22 @@ export function normalizeCode(raw: string): string | null {
   return CODE_PATTERN.test(code) ? code : null;
 }
 
-export type RsvpPayload = {
+/**
+ * Who is answering: a personal invitation code (/i/CODE links), or — on the
+ * shared links — the name the guest typed plus which page they used.
+ */
+export type Responder = { code: string; name?: undefined; guestType?: undefined } | { code?: undefined; name: string; guestType: InviteType };
+
+export type RsvpPayload = Responder & {
   action: "rsvp";
-  code: string;
   attending: boolean;
   guestCount: number;
   companions: string[];
   message: string;
 };
 
-export type GodparentPayload = {
+export type GodparentPayload = Responder & {
   action: "godparent";
-  code: string;
   accepted: boolean;
   message: string;
 };
@@ -74,31 +80,50 @@ function cleanText(value: unknown, max: number): string | null {
   return text.length <= max ? text : null;
 }
 
+/** A display name from a link or form: no control characters or angle brackets, at most `max` characters. */
+export function cleanDisplayName(raw: string, max: number = LIMITS.name): string | undefined {
+  const text = Array.from(raw)
+    .filter((ch) => ch >= " " && ch !== "<" && ch !== ">")
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > 0 && text.length <= max ? text : undefined;
+}
+
+function responderOf(body: Record<string, unknown>): Responder | string {
+  if (body.code !== undefined) {
+    const code = typeof body.code === "string" ? normalizeCode(body.code) : null;
+    return code ? { code } : "This invitation link is not valid.";
+  }
+  const name = typeof body.name === "string" ? cleanDisplayName(body.name) : undefined;
+  if (!name) return "Please enter your name.";
+  return { name, guestType: body.guestType === "godparent" ? "godparent" : "guest" };
+}
+
 /**
- * Validates an RSVP submission's shape and basic bounds. The per-invitation
- * guest limit is enforced again by Apps Script against the Sheet, which is
- * the source of truth.
+ * Validates an RSVP submission's shape and basic bounds. Guest limits are
+ * enforced again by Apps Script against the Sheet, which is the source of truth.
  */
 export function validateSubmission(input: unknown): ValidationResult {
   if (!input || typeof input !== "object") return { ok: false, error: "Invalid request." };
   const body = input as Record<string, unknown>;
 
-  const code = typeof body.code === "string" ? normalizeCode(body.code) : null;
-  if (!code) return { ok: false, error: "This invitation link is not valid." };
+  const who = responderOf(body);
+  if (typeof who === "string") return { ok: false, error: who };
 
   const message = cleanText(body.message, LIMITS.message);
   if (message === null) return { ok: false, error: `Messages can be up to ${LIMITS.message} characters.` };
 
   if (body.action === "godparent") {
     if (typeof body.accepted !== "boolean") return { ok: false, error: "Please choose an answer." };
-    return { ok: true, value: { action: "godparent", code, accepted: body.accepted, message } };
+    return { ok: true, value: { ...who, action: "godparent", accepted: body.accepted, message } };
   }
 
   if (body.action !== "rsvp") return { ok: false, error: "Invalid request." };
   if (typeof body.attending !== "boolean") return { ok: false, error: "Please let us know if you can attend." };
 
   if (!body.attending) {
-    return { ok: true, value: { action: "rsvp", code, attending: false, guestCount: 0, companions: [], message } };
+    return { ok: true, value: { ...who, action: "rsvp", attending: false, guestCount: 0, companions: [], message } };
   }
 
   const guestCount = body.guestCount;
@@ -116,5 +141,5 @@ export function validateSubmission(input: unknown): ValidationResult {
     if (name) companions.push(name);
   }
 
-  return { ok: true, value: { action: "rsvp", code, attending: true, guestCount, companions, message } };
+  return { ok: true, value: { ...who, action: "rsvp", attending: true, guestCount, companions, message } };
 }

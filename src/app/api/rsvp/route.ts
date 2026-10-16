@@ -42,7 +42,13 @@ export async function POST(request: NextRequest) {
   const parsed = validateSubmission(body);
   if (!parsed.ok) return json(400, { ok: false, error: parsed.error });
 
-  const result = await submitToSheet(parsed.value);
+  // Shared links have no per-invitation limit in the Sheet, so cap them here.
+  const value = parsed.value;
+  if (value.action === "rsvp" && value.name && value.guestCount > event.openRsvpMaxGuests) {
+    return json(422, { ok: false, error: `Up to ${event.openRsvpMaxGuests} people per response, please.` });
+  }
+
+  const result = await submitToSheet(value);
   if (!result.ok) {
     const status =
       result.error === "not_found" ? 404 : result.error === "unavailable" || result.error === "not_configured" ? 503 : 422;

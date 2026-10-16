@@ -22,9 +22,9 @@ Open `src/config/event.ts` in VS Code and change these. They are marked `TODO`.
 | What | Line to find | Example |
 | --- | --- | --- |
 | Parents' names (closing signature) | `parents: "Mommy & Daddy"` | `parents: "Juan & Maria"` |
-| Ninongs and Ninangs | `ninongs: [...]`, `ninangs: [...]` | `ninangs: ["Tita Maria Santos", "Ate Joy Cruz"]` |
 | Diaper size | `detail: "Size: to follow"` | `detail: "Size: Medium (M)"` |
-| RSVP deadline | `rsvpDeadline: "2026-11-22T23:59:59+08:00"` | Change only the date part |
+| RSVP deadline | `rsvpDeadline: "2026-11-08T23:59:59+08:00"` | Change only the date part |
+| Most people per RSVP on the shared links | `openRsvpMaxGuests: 5` | `openRsvpMaxGuests: 4` |
 | Hashtag | `hashtag: ...` | Or `hashtag: ""` to hide it |
 
 Keep the quote marks `"` and commas `,` exactly as they are. Only change the words inside the quotes.
@@ -64,7 +64,7 @@ The code lives on GitHub at <https://github.com/thelinkology/EliInvitation>. Ver
    change **Project Name** (e.g. `eli-invitation`); it becomes your web address.
 5. Click **Deploy** and wait 1–3 minutes. You'll see confetti and a preview of the site.
 6. Click **Continue to Dashboard**. Your live address is shown under **Domains**, for example
-   **https://eli-invitation.vercel.app**. Open it on your phone. The invitation should work; the RSVP will
+   **https://babyeli.link-ui.com**. Open it on your phone. The invitation should work; the RSVP will
    say "RSVP opens soon" until Step 4.
 
 From now on, every change pushed to the `main` branch on GitHub is published automatically.
@@ -101,7 +101,10 @@ From now on, every change pushed to the `main` branch on GitHub is published aut
 5. Click **Invitation → 1. Set up sheets** again if it didn't finish. You'll now see the tabs **Summary**,
    **Guests**, **Responses** and **Log** at the bottom.
 
-### 3d. Type your guest list
+### 3d. Type your guest list (optional)
+
+**Skip this if you'll only send the two shared links** (Step 5) — guests type their own names there. The
+**Guests** tab is only needed for personal links with a fixed number of seats.
 
 Open the **Guests** tab. Make one row per invitation, meaning per household or per person you send a link to:
 
@@ -159,19 +162,50 @@ Open the **Guests** tab. Make one row per invitation, meaning per household or p
 
 ---
 
-## Step 5 — Create everyone's personal links (2 min)
+## Step 5 — Your two invitation links
 
-1. In the Sheet, click **Invitation → 2. Set website address** and paste your site address from Step 2,
-   e.g. `https://eli-invitation.vercel.app`, then click **OK**.
+There are two shareable links. Anyone who opens them types their own name when they RSVP:
+
+| Link | Who it's for | What's on it |
+| --- | --- | --- |
+| `https://babyeli.link-ui.com/` | All guests | The invitation and the RSVP |
+| `https://babyeli.link-ui.com/ninong-ninang` | Ninongs and Ninangs | Everything above, plus **"Will you be my Ninong or Ninang?"** with its own answer, and a separate attendance RSVP |
+
+Optional extras you can add to either link (they only change the greeting, nothing else):
+
+* `?to=Tita%20Maria` adds "Dear Tita Maria" — e.g. `https://babyeli.link-ui.com/ninong-ninang?to=Tita%20Maria`
+* `&role=ninang` (or `ninong`) on the godparent link changes the title to just **"Will you be my Ninang?"**
+
+Answers from these links appear in the **Responses** tab with **(shared link)** in the Code column. If someone
+answers again using the **same name**, their row is updated instead of added twice.
+
+### Optional: personal links with a seat limit
+
+If you'd rather give certain guests a fixed number of seats, add them to the **Guests** tab and create personal
+links (their RSVP shows their name and seat count automatically):
+
+1. In the Sheet, click **Invitation → 2. Set website address** and paste your site address,
+   `https://babyeli.link-ui.com`, then click **OK**.
 2. Click **Invitation → 3. Generate codes & links**.
 3. Column **H — Invitation Link** now has a personal link for every guest, like
-   `https://eli-invitation.vercel.app/i/K7M2QX9P`.
+   `https://babyeli.link-ui.com/i/K7M2QX9P`.
 
 Added more guests later? Type them in and run **3. Generate codes & links** again. Old links never change.
 
 ---
 
 ## Step 6 — Test it yourself (10 min)
+
+**Shared links**
+
+1. Open `https://babyeli.link-ui.com/` on your phone, scroll to **RSVP**, type the name `Test Bear`, choose
+   **Joyfully attending**, and send. You should see **"Your RSVP has been saved."**
+2. In the Sheet, **Responses** has a row with **(shared link)** and **Test Bear**.
+3. Open `https://babyeli.link-ui.com/ninong-ninang`, answer **"Will you be my Ninong or Ninang?"** as
+   `Test Ninang`, then RSVP below — the name is already filled in. Both answers land on the same row.
+4. Delete the test rows from **Responses** and **Log**.
+
+**Personal links (only if you use them)**
 
 1. Add a test row in **Guests**: Name `Test Bear`, Type `Guest`, Max Guests `2`. Run **3. Generate codes & links**.
 2. Open Test Bear's link **on your phone**. Check:
@@ -189,15 +223,18 @@ Added more guests later? Type them in and run **3. Generate codes & links** agai
 
 ## Step 7 — Send the invitations
 
-Copy each guest's link from column H. A message you can adapt:
+Messages you can adapt:
 
-> Hi Tita Maria! 💕🧸 You're invited to Zane Emillienne's Christening on Sunday, December 6, 2026.
-> Please open your personal invitation and RSVP here: https://eli-invitation.vercel.app/i/K7M2QX9P
-> Kindly reply by November 22. Thank you!
+> **Guests:** Hi! 💕🧸 You're invited to Zane Emillienne's Christening on Sunday, December 6, 2026.
+> Please open the invitation and RSVP here: https://babyeli.link-ui.com/
+> Kindly reply by November 8. Thank you!
 
-Send each person **their own** link only, because anyone with a link can answer for that invitation.
-For a public post, such as a Facebook story, use the main address without `/i/…`. It shows the invitation
-but asks people to use their personal link to RSVP.
+> **Ninongs & Ninangs:** Hi Tita Maria! 💕🧸 Zane has a very special question for you:
+> https://babyeli.link-ui.com/ninong-ninang?to=Tita%20Maria
+> Kindly reply by November 8. Thank you!
+
+If you use personal links, copy each one from column H and send each person **their own** link only, because
+anyone with a personal link can answer for that invitation.
 
 ---
 

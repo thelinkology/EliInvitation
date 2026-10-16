@@ -1,74 +1,12 @@
 import Image from "next/image";
 
-import { BabysBreath, HeartRule, LeafSprig, SatinBow } from "@/components/art/Ribbons";
-import { AlphabetBlocks, BalloonCluster, GiftBox, SittingTeddy } from "@/components/art/Nursery";
+import { BabysBreath } from "@/components/art/Ribbons";
+import { AlphabetBlocks, GiftBox, SittingTeddy } from "@/components/art/Nursery";
 import { DressFigure, ShirtFigure } from "@/components/art/Scenes";
 import { BottleIcon, DiaperIcon, EnvelopeIcon, NoKissIcon, NoSmokingIcon, SanitizeIcon, WipesIcon } from "@/components/icons";
 import { Panel, PanelTitle, PillLabel } from "@/components/Panel";
 import { Reveal } from "@/components/Reveal";
 import { event } from "@/config/event";
-
-/* ------------------------------------------------------------------ */
-/* Godparents                                                          */
-/* ------------------------------------------------------------------ */
-
-/** Two arched columns listing the Ninongs and Ninangs. Hidden when both lists are empty. */
-export function GodparentsPanel() {
-  const { ninongs, ninangs }: { ninongs: readonly string[]; ninangs: readonly string[] } = event.godparents;
-  if (ninongs.length === 0 && ninangs.length === 0) return null;
-
-  const columns = [
-    { title: "Ninongs", names: ninongs, tie: "yellow" as const, bow: "yellow" as const },
-    { title: "Ninangs", names: ninangs, tie: "pink" as const, bow: "pink" as const },
-  ].filter((c) => c.names.length > 0);
-
-  return (
-    <Panel
-      labelledBy="godparents-title"
-      tone="pink"
-      className="pb-24"
-      decor={
-        <>
-          <BalloonCluster className="fx fx-balloon pointer-events-none absolute top-24 -left-14 w-28 opacity-90" />
-          <BalloonCluster flip className="fx fx-balloon fx-d1 pointer-events-none absolute top-28 -right-14 w-28 opacity-90" />
-          <BabysBreath className="fx fx-flower fx-d2 pointer-events-none absolute bottom-4 -left-4 w-28" />
-          <BabysBreath flip className="fx fx-flower fx-d3 pointer-events-none absolute -right-4 bottom-4 w-28" />
-        </>
-      }
-    >
-      <PanelTitle id="godparents-title" main="Godparents" />
-      <p className="fx fx-text fx-d1 mx-auto mt-3 max-w-xs text-center font-serif text-lg leading-snug text-ink-soft">
-        With grateful hearts, we present {event.babyFirstName}&rsquo;s beloved godparents, who will guide and support{" "}
-        {event.babyPronoun} in faith and life.
-      </p>
-
-      <div className={`mx-auto mt-14 grid max-w-[400px] gap-3 ${columns.length > 1 ? "grid-cols-2" : "max-w-[220px]"}`}>
-        {columns.map((col, i) => (
-          <Reveal key={col.title} delay={i * 120} variant={i % 2 ? "right" : "left"} className="h-full">
-            <article className="relative h-full rounded-t-[999px] border border-blush-300 bg-paper/95 px-3 pt-10 pb-6 text-center shadow-[0_20px_40px_-26px_rgba(176,77,108,0.6)]">
-              <div aria-hidden="true" className="absolute inset-1.5 rounded-t-[999px] border border-gold-300/70" />
-              <SatinBow color={col.bow} className="absolute -top-6 left-1/2 w-20 -translate-x-1/2" />
-              <SittingTeddy tie={col.tie} className="fx fx-teddy relative mx-auto w-20" />
-              <h3 className="relative mt-1 font-script text-4xl text-cocoa">{col.title}</h3>
-              <HeartRule className="relative mt-1 scale-75" />
-              <ul className="relative mt-2 space-y-1.5">
-                {col.names.map((name, j) => (
-                  <li key={`${name}-${j}`} className="font-serif text-[1.05rem] leading-snug text-ink">
-                    {name}
-                  </li>
-                ))}
-              </ul>
-              <div className="relative mt-3 flex justify-center gap-1" aria-hidden="true">
-                <LeafSprig className="w-10" flip />
-                <LeafSprig className="w-10" />
-              </div>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </Panel>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Dress code                                                          */

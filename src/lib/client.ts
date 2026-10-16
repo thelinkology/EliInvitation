@@ -61,3 +61,24 @@ export function whenRevealed(cb: () => void): () => void {
   window.addEventListener(REVEALED_EVENT, cb, { once: true });
   return () => window.removeEventListener(REVEALED_EVENT, cb);
 }
+
+// The name typed on a shared link, shared by the godparent answer and RSVP forms
+// on the same page so guests only type it once.
+let sharedName = "";
+const nameListeners = new Set<() => void>();
+
+export function useSharedName(): [string, (name: string) => void] {
+  const name = useSyncExternalStore(
+    (cb) => {
+      nameListeners.add(cb);
+      return () => nameListeners.delete(cb);
+    },
+    () => sharedName,
+    () => "",
+  );
+  const set = (next: string) => {
+    sharedName = next;
+    nameListeners.forEach((cb) => cb());
+  };
+  return [name, set];
+}

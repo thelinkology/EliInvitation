@@ -32,8 +32,11 @@ export function appsScriptConfig(): { url: string; secret: string } | null {
   const url = env("APPS_SCRIPT_URL");
   const secret = env("APPS_SCRIPT_SECRET");
   if (!url || !secret) return null;
-  // Outside production, a local mock (http://localhost:<port>/...) is allowed for testing.
-  const localMock = process.env.NODE_ENV !== "production" && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(url);
+  // A local mock (http://localhost:<port>/...) is allowed for testing: always in development,
+  // and in a local production build when APPS_SCRIPT_ALLOW_LOCAL=1.
+  const localMock =
+    (process.env.NODE_ENV !== "production" || process.env.APPS_SCRIPT_ALLOW_LOCAL === "1") &&
+    /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(url);
   if (!APPS_SCRIPT_URL_PATTERN.test(url) && !localMock) {
     console.error(
       "[rsvp] APPS_SCRIPT_URL must look like https://script.google.com/macros/s/<id>/exec — ignoring it.",

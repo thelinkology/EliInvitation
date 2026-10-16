@@ -38,7 +38,12 @@ export const event = {
   /** Time zone used to display every date and time on the site. */
   timeZone: "Asia/Manila",
   /** TODO: Last day to RSVP (currently two weeks before). Submissions are refused after this moment. */
-  rsvpDeadline: "2026-11-22T23:59:59+08:00",
+  rsvpDeadline: "2026-11-08T23:59:59+08:00",
+  /**
+   * Most people one response can bring from the shared links (/ and /ninong-ninang),
+   * including the guest. Personal /i/CODE links use "Max Guests" from the Sheet instead.
+   */
+  openRsvpMaxGuests: 5,
 
   /** Short location shown under the date in the hero. */
   city: "Tierra Vista, Marikina City",
@@ -83,16 +88,6 @@ export const event = {
         { name: "Baby Pink", hex: "#F6BFD0" },
       ],
     },
-  },
-
-  /**
-   * Godparents shown on the invitation. These names are PUBLIC — anyone with
-   * the site link can see them. TODO: replace the placeholders, add or remove
-   * lines as needed, or empty both lists to hide the section.
-   */
-  godparents: {
-    ninongs: ["Ninong's Name", "Ninong's Name", "Ninong's Name"],
-    ninangs: ["Ninang's Name", "Ninang's Name", "Ninang's Name"],
   },
 
   giftGuide: {

@@ -4,7 +4,7 @@ import { Envelope } from "@/components/Envelope";
 import { FloatingRsvp, Footer } from "@/components/Footer";
 import { GodparentSection } from "@/components/GodparentSection";
 import { Hero } from "@/components/Hero";
-import { DressCodePanel, GiftGuidePanel, GodparentsPanel, ProtocolPanel } from "@/components/InfoPanels";
+import { DressCodePanel, GiftGuidePanel, ProtocolPanel } from "@/components/InfoPanels";
 import { LocationPanel } from "@/components/LocationPanel";
 import { MessagePanel } from "@/components/MessagePanel";
 import { RsvpSection } from "@/components/RsvpSection";
@@ -30,11 +30,11 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
   const name = invite?.name ?? convenience?.name;
   const isGodparent = invite ? invite.type === "godparent" : (convenience?.isGodparent ?? false);
   const role = invite?.role || convenience?.role || "";
-  const roleLabel = role || "Ninong/Ninang";
+  const roleLabel = role || "Ninong or Ninang";
 
   const configured: RsvpMode = rsvpMode();
   const mode: RsvpMode = forceFormMode && configured === "live" ? "form" : configured;
-  const viewer = invite || convenience?.name ? (isGodparent ? "godparent" : "guest") : undefined;
+  const viewer = isGodparent ? "godparent" : invite || convenience?.name ? "guest" : undefined;
 
   return (
     <>
@@ -52,7 +52,7 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
         <Hero greetingName={name} />
         <CountdownPanel />
 
-        {isGodparent && name && (
+        {isGodparent && (
           <GodparentSection
             name={name}
             mode={mode}
@@ -65,7 +65,6 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
 
         <LocationPanel />
         <SaveTheDate />
-        <GodparentsPanel />
         <DressCodePanel viewer={viewer} />
         <GiftGuidePanel />
         <ProtocolPanel />
@@ -75,6 +74,8 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
           mode={mode}
           invite={invite ? { code: invite.code, name: invite.name, maxGuests: invite.maxGuests, rsvp: invite.rsvp } : null}
           guestName={invite ? undefined : name}
+          guestType={isGodparent ? "godparent" : "guest"}
+          openMaxGuests={event.openRsvpMaxGuests}
           formHref={formLink(isGodparent ? "godparentAttendance" : "guest", name)}
           deadline={event.rsvpDeadline}
           deadlineLabel={rsvpDeadlineLabel}

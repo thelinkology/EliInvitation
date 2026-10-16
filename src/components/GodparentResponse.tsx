@@ -5,13 +5,13 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import { FormRedirect } from "@/components/FormRedirect";
 import { SpinnerIcon } from "@/components/icons";
 import { buttonPrimary, field, textLink } from "@/components/ui";
-import { formatSavedAt, submitResponse, useDeadlinePassed } from "@/lib/client";
+import { formatSavedAt, submitResponse, useDeadlinePassed, useSharedName } from "@/lib/client";
 import { LIMITS, type SavedGodparentAnswer } from "@/lib/invite";
 
 export type GodparentResponseProps = {
   mode: "live" | "form" | "none";
   invite: { code: string; godparent: SavedGodparentAnswer | null } | null;
-  /** "Ninong", "Ninang", or "Ninong/Ninang" when unknown. */
+  /** "Ninong", "Ninang", or "Ninong or Ninang" when unknown. */
   roleLabel: string;
   formHref: string | null;
   deadline: string;
@@ -28,7 +28,9 @@ export function GodparentResponse({ mode, invite, roleLabel, formHref, deadline 
     );
   }
 
-  if (mode === "live" && invite) return <LiveAnswer code={invite.code} saved={invite.godparent} roleLabel={roleLabel} />;
+  if (mode === "live") {
+    return <LiveAnswer code={invite?.code ?? null} saved={invite?.godparent ?? null} roleLabel={roleLabel} />;
+  }
 
   if (formHref) {
     return (
@@ -47,7 +49,10 @@ export function GodparentResponse({ mode, invite, roleLabel, formHref, deadline 
   );
 }
 
-function LiveAnswer({ code, saved: initial, roleLabel }: { code: string; saved: SavedGodparentAnswer | null; roleLabel: string }) {
+/** Godparent answer saved to the Sheet; on the shared link (`code` null) the guest types their name. */
+function LiveAnswer({ code, saved: initial, roleLabel }: { code: string | null; saved: SavedGodparentAnswer | null; roleLabel: string }) {
+  const [typedName, setTypedName] = useSharedName();
+  const name = typedName;
   const [saved, setSaved] = useState(initial);
   const [editing, setEditing] = useState(!initial);
   const [justSaved, setJustSaved] = useState(false);
@@ -61,6 +66,12 @@ function LiveAnswer({ code, saved: initial, roleLabel }: { code: string; saved: 
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!code && !name.trim()) {
+      setStatus("error");
+      setError("Please enter your name.");
+      requestAnimationFrame(() => errorRef.current?.focus());
+      return;
+    }
     if (accepted === null) {
       setStatus("error");
       setError("Please choose an answer.");
@@ -70,7 +81,13 @@ function LiveAnswer({ code, saved: initial, roleLabel }: { code: string; saved: 
     setStatus("submitting");
     setError("");
     const website = (new FormData(e.currentTarget).get("website") as string) || "";
-    const result = await submitResponse({ action: "godparent", code, accepted, message, website });
+    const result = await submitResponse({
+      ...(code ? { code } : { name: name.trim(), guestType: "godparent" as const }),
+      action: "godparent",
+      accepted,
+      message,
+      website,
+    });
 
     if (!result.ok || !result.godparent) {
       setStatus("error");
@@ -129,6 +146,29 @@ function LiveAnswer({ code, saved: initial, roleLabel }: { code: string; saved: 
           <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
+
+
+      {!code && (
+        <div className="mb-6">
+          <label htmlFor={`${ids}-name`} className="block font-sans text-sm font-medium text-ink">
+            Your name
+          </label>
+          <input
+            id={`${ids}-name`}
+            type="text"
+            required
+            autoComplete="name"
+            maxLength={LIMITS.name}
+            placeholder="e.g. Maria Santos"
+            className={`${field} mt-2`}
+            value={name}
+            onChange={(e) => {
+              setTypedName(e.target.value);
+              if (status === "error") setStatus("idle");
+            }}
+          />
+        </div>
+      )}
 
       <fieldset>
         <legend className="mb-4 w-full text-center font-serif text-2xl text-ink">Will you be my {roleLabel}?</legend>

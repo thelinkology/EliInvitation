@@ -5,8 +5,8 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import { FormRedirect } from "@/components/FormRedirect";
 import { SpinnerIcon } from "@/components/icons";
 import { buttonPrimary, buttonSecondary, field, textLink } from "@/components/ui";
-import { formatSavedAt, submitResponse, useDeadlinePassed } from "@/lib/client";
-import { LIMITS, type SavedRsvp } from "@/lib/invite";
+import { formatSavedAt, submitResponse, useDeadlinePassed, useSharedName } from "@/lib/client";
+import { LIMITS, type InviteType, type SavedRsvp } from "@/lib/invite";
 
 export type RsvpFormProps = {
   mode: "live" | "form" | "none";
@@ -14,6 +14,10 @@ export type RsvpFormProps = {
   invite: { code: string; name: string; maxGuests: number; rsvp: SavedRsvp | null } | null;
   /** Unverified display name from the link (Google Forms mode only). */
   guestName?: string;
+  /** Which shared page the guest is on, for answers typed without a personal code. */
+  guestType: InviteType;
+  /** Most people one response from a shared link can bring. */
+  openMaxGuests: number;
   formHref: string | null;
   deadline: string;
   deadlineLabel: string;
@@ -21,7 +25,7 @@ export type RsvpFormProps = {
 
 export function RsvpForm(props: RsvpFormProps) {
   const closed = useDeadlinePassed(props.deadline);
-  const { mode, invite, formHref, guestName, deadlineLabel } = props;
+  const { mode, invite, formHref, guestName, guestType, openMaxGuests, deadlineLabel } = props;
 
   if (closed) {
     return (
@@ -31,28 +35,30 @@ export function RsvpForm(props: RsvpFormProps) {
     );
   }
 
-  if (mode === "live" && invite) return <LiveRsvp invite={invite} deadlineLabel={deadlineLabel} />;
+  if (mode === "live") {
+    return invite ? (
+      <LiveRsvp
+        code={invite.code}
+        inviteName={invite.name}
+        guestType={guestType}
+        maxGuests={invite.maxGuests}
+        initial={invite.rsvp}
+        deadlineLabel={deadlineLabel}
+      />
+    ) : (
+      <LiveRsvp code={null} guestType={guestType} maxGuests={openMaxGuests} initial={null} deadlineLabel={deadlineLabel} />
+    );
+  }
 
   if (formHref) {
     return (
       <FormRedirect href={formHref} label="Confirm My Attendance">
         {guestName && <p className="font-serif text-2xl text-ink">Dear {guestName},</p>}
         <p className="mx-auto mt-3 max-w-lg leading-relaxed text-ink-soft">
-          {mode === "live"
-            ? "We couldn't match this page to a personal invitation, so please RSVP using our form. "
-            : ""}
           The form asks for your name, whether you can attend, how many will be coming, the names of your companions,
           and an optional message for the family. Kindly respond by <strong className="text-ink">{deadlineLabel}</strong>.
         </p>
       </FormRedirect>
-    );
-  }
-
-  if (mode === "live") {
-    return (
-      <Notice title="Please use your personal link">
-        Your RSVP is linked to the personal invitation we sent you. Open that link to confirm your attendance.
-      </Notice>
     );
   }
 
@@ -72,25 +78,39 @@ function Notice({ title, children }: { title: string; children: React.ReactNode 
   );
 }
 
+/**
+ * RSVP saved straight to the Google Sheet. With a personal `code` the guest is
+ * already known; on the shared links (`code` null) they type their name, and
+ * sending again with the same name updates their earlier answer.
+ */
 function LiveRsvp({
-  invite,
+  code,
+  inviteName,
+  guestType,
+  maxGuests,
+  initial,
   deadlineLabel,
 }: {
-  invite: NonNullable<RsvpFormProps["invite"]>;
+  code: string | null;
+  inviteName?: string;
+  guestType: InviteType;
+  maxGuests: number;
+  initial: SavedRsvp | null;
   deadlineLabel: string;
 }) {
-  const { code, name, maxGuests } = invite;
-  const [saved, setSaved] = useState<SavedRsvp | null>(invite.rsvp);
-  const [editing, setEditing] = useState(!invite.rsvp);
+  const [typedName, setTypedName] = useSharedName();
+  const name = code ? (inviteName ?? "") : typedName;
+  const [saved, setSaved] = useState<SavedRsvp | null>(initial);
+  const [editing, setEditing] = useState(!initial);
   const [justSaved, setJustSaved] = useState(false);
 
-  const [attending, setAttending] = useState<boolean | null>(invite.rsvp?.attending ?? null);
-  const [count, setCount] = useState(Math.min(Math.max(invite.rsvp?.guestCount || 1, 1), maxGuests));
+  const [attending, setAttending] = useState<boolean | null>(initial?.attending ?? null);
+  const [count, setCount] = useState(Math.min(Math.max(initial?.guestCount || 1, 1), maxGuests));
   const [companions, setCompanions] = useState<string[]>(() => {
-    const list = invite.rsvp?.companions ?? [];
+    const list = initial?.companions ?? [];
     return Array.from({ length: Math.max(maxGuests - 1, 0) }, (_, i) => list[i] ?? "");
   });
-  const [message, setMessage] = useState(invite.rsvp?.message ?? "");
+  const [message, setMessage] = useState(initial?.message ?? "");
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -100,6 +120,12 @@ function LiveRsvp({
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!code && !name.trim()) {
+      setStatus("error");
+      setError("Please enter your name.");
+      requestAnimationFrame(() => errorRef.current?.focus());
+      return;
+    }
     if (attending === null) {
       setStatus("error");
       setError("Please let us know whether you can attend.");
@@ -111,8 +137,8 @@ function LiveRsvp({
 
     const website = (new FormData(e.currentTarget).get("website") as string) || "";
     const result = await submitResponse({
+      ...(code ? { code } : { name: name.trim(), guestType }),
       action: "rsvp",
-      code,
       attending,
       guestCount: attending ? count : 0,
       companions: attending ? companions.slice(0, count - 1).filter((c) => c.trim()) : [],
@@ -183,16 +209,50 @@ function LiveRsvp({
   return (
     <form onSubmit={onSubmit} noValidate className="mx-auto max-w-xl" aria-describedby={`${ids}-intro`}>
       <div id={`${ids}-intro`} className="text-center">
-        <p className="font-serif text-2xl text-ink">Dear {name},</p>
-        <p className="mt-3 leading-relaxed text-ink-soft">
-          We have reserved{" "}
-          <strong className="text-ink">
-            {maxGuests} {maxGuests === 1 ? "seat" : "seats"}
-          </strong>{" "}
-          in your honor. Please let us know if you can join us, how many will come, and who is coming with you. Kindly
-          respond by <strong className="text-ink">{deadlineLabel}</strong>.
-        </p>
+        {code ? (
+          <>
+            <p className="font-serif text-2xl text-ink">Dear {name},</p>
+            <p className="mt-3 leading-relaxed text-ink-soft">
+              We have reserved{" "}
+              <strong className="text-ink">
+                {maxGuests} {maxGuests === 1 ? "seat" : "seats"}
+              </strong>{" "}
+              in your honor. Please let us know if you can join us, how many will come, and who is coming with you.
+              Kindly respond by <strong className="text-ink">{deadlineLabel}</strong>.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="font-serif text-2xl text-ink">We&rsquo;d love to celebrate with you</p>
+            <p className="mt-3 leading-relaxed text-ink-soft">
+              Please tell us your name, whether you can join us, how many will come, and who is coming with you. Kindly
+              respond by <strong className="text-ink">{deadlineLabel}</strong>.
+            </p>
+          </>
+        )}
       </div>
+
+      {!code && (
+        <div className="mt-6">
+          <label htmlFor={`${ids}-name`} className="block font-sans text-sm font-medium text-ink">
+            Your name
+          </label>
+          <input
+            id={`${ids}-name`}
+            type="text"
+            required
+            autoComplete="name"
+            maxLength={LIMITS.name}
+            placeholder="e.g. Maria Santos"
+            className={`${field} mt-2`}
+            value={name}
+            onChange={(e) => {
+              setTypedName(e.target.value);
+              if (status === "error") setStatus("idle");
+            }}
+          />
+        </div>
+      )}
 
       {/* Honeypot for bots — hidden from people and assistive tech. */}
       <div className="hidden" aria-hidden="true">
@@ -254,7 +314,7 @@ function LiveRsvp({
                 ))}
               </select>
               <p className="mt-1.5 text-xs text-ink-soft">
-                Up to {maxGuests} for this invitation.
+                Up to {maxGuests} {code ? "for this invitation" : "per response"}.
               </p>
             </div>
           ) : (
@@ -337,8 +397,9 @@ function LiveRsvp({
           </button>
         )}
         <p className="max-w-md text-center text-xs leading-relaxed text-ink-soft">
-          Your answer goes straight to the family&rsquo;s private guest list. Sending again later updates it rather than
-          adding a duplicate.
+          {code
+            ? "Your answer goes straight to the family\u2019s private guest list. Sending again later updates it rather than adding a duplicate."
+            : "Your answer goes straight to the family\u2019s private guest list. To change it later, send it again using the same name."}
         </p>
       </div>
     </form>

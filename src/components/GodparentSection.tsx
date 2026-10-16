@@ -8,7 +8,7 @@ import { Reveal } from "@/components/Reveal";
 import { event } from "@/config/event";
 
 /** The Ninong/Ninang request: a letter in the baby's voice plus its own response form. */
-export function GodparentSection({ name, ...response }: GodparentResponseProps & { name: string }) {
+export function GodparentSection({ name, ...response }: GodparentResponseProps & { name?: string }) {
   const { godparent: photo } = event.photos;
   const role = response.roleLabel;
 
@@ -28,7 +28,21 @@ export function GodparentSection({ name, ...response }: GodparentResponseProps &
         <p className="font-sans text-[11px] font-medium tracking-[0.35em] text-cocoa uppercase">A special request</p>
         <h2 id="godparent-title" className="mt-1">
           <span className="block font-script text-4xl leading-tight text-cocoa">Will you be my</span>
-          <span className="title-track -mt-1 block font-display text-5xl font-medium tracking-[0.06em] whitespace-nowrap text-rose-600 uppercase">{role}?</span>
+          {role.includes(" or ") ? (
+            <>
+              <span className="title-track -mt-1 block font-display text-5xl font-medium tracking-[0.06em] whitespace-nowrap text-rose-600 uppercase">
+                Ninong
+              </span>
+              <span className="-my-1 block font-script text-4xl leading-tight text-cocoa">or</span>
+              <span className="title-track block font-display text-5xl font-medium tracking-[0.06em] whitespace-nowrap text-rose-600 uppercase">
+                Ninang?
+              </span>
+            </>
+          ) : (
+            <span className="title-track -mt-1 block font-display text-5xl font-medium tracking-[0.06em] whitespace-nowrap text-rose-600 uppercase">
+              {role}?
+            </span>
+          )}
         </h2>
         <HeartRule className="mt-3" />
       </Reveal>
@@ -49,7 +63,7 @@ export function GodparentSection({ name, ...response }: GodparentResponseProps &
 
       <Reveal>
         <NotchedFrame bow className="mx-auto mt-12 max-w-[420px]">
-          <p className="font-script text-4xl text-cocoa">Dear {name},</p>
+          <p className="font-script text-4xl text-cocoa">Dear {name ?? "Ninong & Ninang"},</p>
           <div className="mt-3 space-y-4 font-serif text-lg leading-relaxed text-ink">
             <p>
               Hi! It&rsquo;s me, {event.babyFirstName}. Mommy and Daddy say you are one of the most special people in our

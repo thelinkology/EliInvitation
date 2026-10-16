@@ -3,7 +3,9 @@
 A personalized, mobile-first christening invitation built with Next.js 16, TypeScript and Tailwind CSS, hosted on Vercel.
 RSVPs are stored in Google Sheets, through Google Apps Script. Google Forms is an optional backup.
 
-* `/` is the shared invitation. Optional `?to=Name&type=godparent&role=ninang` personalizes the greeting only.
+* `/` is the general invitation for all guests. Optional `?to=Name` adds a greeting.
+* `/ninong-ninang` is the godparent invitation: adds "Will you be my Ninong or Ninang?". Optional `?to=Name&role=ninang`.
+  On both shared links guests type their name to RSVP.
 * `/i/<code>` is a personal invitation. It is looked up in the Google Sheet on the server.
 * `/api/rsvp` receives RSVP and godparent answers and forwards them to Apps Script.
 
