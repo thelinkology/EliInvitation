@@ -14,19 +14,26 @@ const cormorant = Cormorant_Garamond({
 const jost = Jost({ variable: "--font-jost", subsets: ["latin"] });
 const playfair = Playfair_Display({ variable: "--font-playfair", weight: ["400", "500", "600"], subsets: ["latin"] });
 
-const siteUrl =
-  process.env.SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+// Link previews must point at the address guests actually receive.
+const siteUrl = process.env.SITE_URL || event.siteUrl;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: `Christening of ${event.babyName}`,
   description: `You are invited to the Christening of ${event.babyName} on ${eventDateLong}.`,
+  // The preview picture itself comes from src/app/opengraph-image.tsx.
   openGraph: {
     title: `You're invited · Christening of ${event.babyName}`,
-    description: `${eventDateLong} · ${event.ceremony.venue}`,
-    images: [{ url: event.photos.hero.src, width: event.photos.hero.width, height: event.photos.hero.height }],
+    description: `${eventDateLong} · ${event.ceremony.time} · ${event.ceremony.venue}`,
+    url: "/",
+    siteName: `Christening of ${event.babyName}`,
+    locale: "en_PH",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `You're invited · Christening of ${event.babyName}`,
+    description: `${eventDateLong} · ${event.ceremony.venue}`,
   },
   robots: { index: false, follow: false },
 };

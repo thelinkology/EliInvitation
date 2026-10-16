@@ -8,6 +8,8 @@
 
 export const event = {
   babyName: "Zane Emillienne",
+  /** The invitation's public address. Used for link previews when the link is shared. */
+  siteUrl: "https://babyeli.link-ui.com",
   babyFirstName: "Zane",
   /** "her" or "him" — used in sentences like "welcoming her into the family of God". */
   babyPronoun: "her" as "her" | "him",
@@ -123,6 +125,8 @@ export const event = {
 
   /** Photos in /public/images. Alt text is read aloud by screen readers. */
   photos: {
+    /** Photo used in the link-preview picture (src/app/opengraph-image.tsx). */
+    share: { src: "/images/OriginalImage.jpg" },
     hero: {
       src: "/images/AIedit4.jpg",
       alt: "Zane smiling in a teddy-bear bonnet, surrounded by teddy bears and roses",
