@@ -4,7 +4,7 @@ import { BabysBreath, LeafSprig, SatinBow, TinyHeart } from "@/components/art/Ri
 import { BalloonCluster, SittingTeddy } from "@/components/art/Nursery";
 import { CrossWithSprigs, NotchedFrame, Panel } from "@/components/Panel";
 import { Reveal } from "@/components/Reveal";
-import { event } from "@/config/event";
+import { event, scheduleFor } from "@/config/event";
 
 const monthDayYear = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -26,7 +26,8 @@ export type HeroGodparent = {
 
 export function Hero({ greetingName, godparent }: { greetingName?: string; godparent?: HeroGodparent }) {
   const { hero } = event.photos;
-  const date = new Date(event.startsAt);
+  const plan = scheduleFor(Boolean(godparent));
+  const date = new Date(plan.startsAt);
   const child = event.babyPronoun === "him" ? "boy" : "girl";
 
   return (
@@ -90,10 +91,10 @@ export function Hero({ greetingName, godparent }: { greetingName?: string; godpa
             <span className="h-px w-10 bg-gold-400" />
           </div>
           <p className="mt-2 font-display text-lg tracking-[0.18em] text-ink uppercase">
-            <time dateTime={event.startsAt}>{monthDayYear.format(date)}</time>
+            <time dateTime={plan.startsAt}>{monthDayYear.format(date)}</time>
           </p>
           <p className="mt-1 font-sans text-xs font-medium tracking-[0.25em] text-cocoa uppercase">
-            {weekday.format(date)} · {event.ceremony.time}
+            {weekday.format(date)} · {plan.startTime}
           </p>
           <div className="mt-3 flex items-center justify-center gap-1" aria-hidden="true">
             <LeafSprig className="w-14" flip />

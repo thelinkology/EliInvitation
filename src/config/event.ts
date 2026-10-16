@@ -67,6 +67,9 @@ export const event = {
     address: "#8 St. Paul Street, Tierra Vista, Nangka, Marikina City",
     time: "1:00 PM – 4:00 PM",
     note: "Right beside Jesus Church",
+    /** When guests should arrive — regular guests skip the ceremony and come straight here. */
+    startsAt: "2026-12-06T13:00:00+08:00",
+    startTime: "1:00 PM",
     /** Optional: a photo in /public/images. Leave "" to show the illustration. */
     image: "",
     /** Optional: replace with the "Share → Copy link" URL from Google Maps for a precise pin. */
@@ -173,15 +176,28 @@ export const rsvpDeadlineLabel = deadlineFmt.format(new Date(event.rsvpDeadline)
 
 export const monogram = event.babyFirstName.trim().charAt(0).toUpperCase() || "♡";
 
-/** Google Calendar "add event" link covering the ceremony and celebration. */
-export function googleCalendarUrl(): string {
+/**
+ * What each kind of invitee attends. Ninongs and Ninangs come to the church
+ * ceremony and the reception; regular guests go straight to the reception.
+ */
+export function scheduleFor(isGodparent: boolean) {
+  return isGodparent
+    ? { startsAt: event.startsAt, startTime: event.ceremony.time, venue: event.ceremony.venue, address: event.ceremony.address }
+    : { startsAt: event.reception.startsAt, startTime: event.reception.startTime, venue: event.reception.venue, address: event.reception.address };
+}
+
+/** Google Calendar "add event" link: ceremony + reception for godparents, reception only for guests. */
+export function googleCalendarUrl(isGodparent: boolean): string {
   const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const plan = scheduleFor(isGodparent);
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: `Christening of ${event.babyName}`,
-    dates: `${fmt(new Date(event.startsAt))}/${fmt(new Date(event.endsAt))}`,
-    details: `${event.ceremony.title} at ${event.ceremony.venue} (${event.ceremony.time}), followed by the celebration at ${event.reception.venue} (${event.reception.time}).`,
-    location: `${event.ceremony.venue}, ${event.ceremony.address}`,
+    dates: `${fmt(new Date(plan.startsAt))}/${fmt(new Date(event.endsAt))}`,
+    details: isGodparent
+      ? `${event.ceremony.title} at ${event.ceremony.venue} (${event.ceremony.time}), followed by the celebration at ${event.reception.venue} (${event.reception.time}).`
+      : `Christening celebration at ${event.reception.venue} (${event.reception.time}).`,
+    location: `${plan.venue}, ${plan.address}`,
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }

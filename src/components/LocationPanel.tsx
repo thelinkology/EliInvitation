@@ -8,9 +8,10 @@ import { NotchedFrame, Panel, PanelTitle, ScriptLabel } from "@/components/Panel
 import { Reveal } from "@/components/Reveal";
 import { event } from "@/config/event";
 
-export function LocationPanel() {
+/** Venues: church + reception for godparents; regular guests go straight to the reception. */
+export function LocationPanel({ isGodparent }: { isGodparent: boolean }) {
   const venues = [
-    { label: "Ceremony", ...event.ceremony, Scene: ChurchScene, bowColor: "pink" as const },
+    ...(isGodparent ? [{ label: "Ceremony", ...event.ceremony, Scene: ChurchScene, bowColor: "pink" as const }] : []),
     { label: "Reception", ...event.reception, Scene: ClubhouseScene, bowColor: "yellow" as const },
   ];
 

@@ -7,5 +7,11 @@ export const size = SHARE_CARD_SIZE;
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  return renderShareCard({ eyebrow: "Will you be my", title: "NINONG", subtitle: "or Ninang?" });
+  return renderShareCard({
+    eyebrow: "Will you be my",
+    title: "NINONG",
+    subtitle: "or Ninang?",
+    time: event.ceremony.time,
+    venue: event.ceremony.venue,
+  });
 }

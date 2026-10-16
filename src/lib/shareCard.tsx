@@ -21,6 +21,10 @@ export type ShareCardText = {
   title: string;
   /** Script line under the title. */
   subtitle: string;
+  /** "1:00 PM" — start time shown after the date. */
+  time: string;
+  /** "Tierra Vista Clubhouse" — venue shown under the date. */
+  venue: string;
 };
 
 const root = process.cwd();
@@ -61,7 +65,7 @@ const bear = svg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 112">
 const balloon = (fill: string) =>
   svg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 150"><path d="M30 80c-4 10 6 16 0 26s6 16 0 26" stroke="#c9a27e" stroke-width="1.4" fill="none"/><ellipse cx="30" cy="40" rx="26" ry="32" fill="${fill}"/><ellipse cx="20" cy="26" rx="6" ry="10" fill="#fff" opacity="0.55" transform="rotate(-20 20 26)"/><path d="M26 72h8l-2 6h-4z" fill="${fill}"/></svg>`);
 
-export function renderShareCard({ eyebrow, title, subtitle }: ShareCardText) {
+export function renderShareCard({ eyebrow, title, subtitle, time, venue }: ShareCardText) {
   return new ImageResponse(
     (
       <div style={{ display: "flex", width: "100%", height: "100%", background: "#fff1f5" }}>
@@ -129,10 +133,10 @@ export function renderShareCard({ eyebrow, title, subtitle }: ShareCardText) {
           </div>
 
           <div style={{ fontFamily: "Playfair", fontSize: 30, letterSpacing: 2, marginTop: 18 }}>
-            {`${dateLine} · ${event.ceremony.time}`}
+            {`${dateLine} · ${time}`}
           </div>
           <div style={{ fontFamily: "Jost", fontSize: 22, color: "#75594f", marginTop: 8 }}>
-            {`${event.ceremony.venue} · ${event.city}`}
+            {`${venue} · ${event.city}`}
           </div>
 
           <img src={bear} alt="" width={96} height={90} style={{ position: "absolute", bottom: 22, left: 40 }} />

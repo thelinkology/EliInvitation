@@ -6,9 +6,9 @@ import { MusicPlayer } from "@/components/MusicPlayer";
 import { Panel, PanelTitle } from "@/components/Panel";
 import { Reveal } from "@/components/Reveal";
 import { buttonSecondary } from "@/components/ui";
-import { event, googleCalendarUrl } from "@/config/event";
+import { event, googleCalendarUrl, scheduleFor } from "@/config/event";
 
-export function CountdownPanel() {
+export function CountdownPanel({ isGodparent }: { isGodparent: boolean }) {
   const { music } = event;
   return (
     <Panel
@@ -44,12 +44,12 @@ export function CountdownPanel() {
         </p>
         <SatinBow className="mx-auto mt-3 w-20" />
         <div className="mt-4">
-          <Countdown startsAt={event.startsAt} />
+          <Countdown startsAt={scheduleFor(isGodparent).startsAt} />
         </div>
         <p className="mt-8 text-center font-script text-5xl text-cocoa">We can&rsquo;t wait</p>
         <p className="text-center font-sans text-xs font-semibold tracking-[0.3em] text-rose-600 uppercase">to celebrate with you!</p>
         <div className="mt-6 flex justify-center">
-          <a href={googleCalendarUrl()} target="_blank" rel="noopener noreferrer" className={buttonSecondary}>
+          <a href={googleCalendarUrl(isGodparent)} target="_blank" rel="noopener noreferrer" className={buttonSecondary}>
             <CalendarIcon className="h-4 w-4" />
             Add to calendar
             <span className="sr-only">(opens in a new tab)</span>

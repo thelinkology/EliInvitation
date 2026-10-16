@@ -57,7 +57,7 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
             isGodparent ? { address, roleLabel, accepted: invite?.godparent ? invite.godparent.accepted : null } : undefined
           }
         />
-        <CountdownPanel />
+        <CountdownPanel isGodparent={isGodparent} />
 
         {isGodparent && (
           <GodparentSection
@@ -70,7 +70,7 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
           />
         )}
 
-        <LocationPanel />
+        <LocationPanel isGodparent={isGodparent} />
         <SaveTheDate />
         <DressCodePanel viewer={viewer} />
         <GiftGuidePanel />

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   // The preview picture itself comes from src/app/opengraph-image.tsx.
   openGraph: {
     title: `You're invited · Christening of ${event.babyName}`,
-    description: `${eventDateLong} · ${event.ceremony.time} · ${event.ceremony.venue}`,
+    description: `${eventDateLong} · ${event.reception.startTime} · ${event.reception.venue}`,
     url: "/",
     siteName: `Christening of ${event.babyName}`,
     locale: "en_PH",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `You're invited · Christening of ${event.babyName}`,
-    description: `${eventDateLong} · ${event.ceremony.venue}`,
+    description: `${eventDateLong} · ${event.reception.venue}`,
   },
   robots: { index: false, follow: false },
 };

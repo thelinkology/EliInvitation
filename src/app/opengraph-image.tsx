@@ -7,5 +7,12 @@ export const size = SHARE_CARD_SIZE;
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  return renderShareCard({ eyebrow: "You are invited to the", title: "CHRISTENING", subtitle: "of our little one" });
+  // Regular guests go straight to the reception.
+  return renderShareCard({
+    eyebrow: "You are invited to the",
+    title: "CHRISTENING",
+    subtitle: "of our little one",
+    time: event.reception.startTime,
+    venue: event.reception.venue,
+  });
 }
