@@ -51,41 +51,23 @@ Press **Ctrl + C** in the terminal to stop the preview.
 
 ---
 
-## Step 2 — Put the website online (15 min)
+## Step 2 — Put the website online (10 min)
 
-1. Go to <https://vercel.com/signup>, choose the **Hobby** (free) plan, and sign up with **Continue with
-   Google** or your e-mail.
-2. In the VS Code terminal, run:
+The code lives on GitHub at <https://github.com/thelinkology/EliInvitation>. Vercel builds the site from there.
 
-   ```
-   npx vercel login
-   ```
+1. Go to <https://vercel.com/signup>, choose the **Hobby** (free) plan, and click **Continue with GitHub**.
+   Sign in as **thelinkology** and allow Vercel access when GitHub asks.
+2. On the Vercel dashboard click **Add New… → Project**.
+3. Find **EliInvitation** in the list and click **Import**. If it isn't listed, click **Adjust GitHub App
+   Permissions**, give Vercel access to that repository, and come back.
+4. On the next screen leave everything as it is. Framework is detected as **Next.js** automatically. You can
+   change **Project Name** (e.g. `eli-invitation`); it becomes your web address.
+5. Click **Deploy** and wait 1–3 minutes. You'll see confetti and a preview of the site.
+6. Click **Continue to Dashboard**. Your live address is shown under **Domains**, for example
+   **https://eli-invitation.vercel.app**. Open it on your phone. The invitation should work; the RSVP will
+   say "RSVP opens soon" until Step 4.
 
-   Pick the same sign-in method. A browser tab opens; approve it, then come back to VS Code.
-3. Run:
-
-   ```
-   npx vercel
-   ```
-
-   Answer the questions like this. Use the arrow keys and Enter.
-   * *Set up and deploy?* → **Yes**
-   * *Which scope?* → your name
-   * *Link to existing project?* → **No**
-   * *Project name?* → type `zane-christening`. This name becomes your web address.
-   * *In which directory is your code located?* → just press **Enter**
-   * *Want to modify these settings?* → **No**
-4. Wait for it to finish (1–3 minutes). Then publish the real version:
-
-   ```
-   npx vercel --prod
-   ```
-
-   At the end it prints your live address, for example **https://zane-christening.vercel.app**.
-   Open it on your phone. The invitation should work. The RSVP will say "RSVP opens soon" until Step 4.
-
-> If `zane-christening` is already taken, Vercel adds extra letters to the address. You can see and change
-> the address later in Vercel → your project → **Settings → Domains**.
+From now on, every change pushed to the `main` branch on GitHub is published automatically.
 
 ---
 
@@ -172,21 +154,18 @@ Open the **Guests** tab. Make one row per invitation, meaning per household or p
    * **Key:** `APPS_SCRIPT_SECRET`
    * **Value:** the secret from 3f
    * Click **Save**
-5. Publish again so the website picks them up. In the VS Code terminal, run:
-
-   ```
-   npx vercel --prod
-   ```
+5. Publish again so the website picks them up: click **Deployments** (top), click the **⋯** menu on the
+   newest deployment, choose **Redeploy**, then **Redeploy** again. Wait until it says **Ready**.
 
 ---
 
 ## Step 5 — Create everyone's personal links (2 min)
 
 1. In the Sheet, click **Invitation → 2. Set website address** and paste your site address from Step 2,
-   e.g. `https://zane-christening.vercel.app`, then click **OK**.
+   e.g. `https://eli-invitation.vercel.app`, then click **OK**.
 2. Click **Invitation → 3. Generate codes & links**.
 3. Column **H — Invitation Link** now has a personal link for every guest, like
-   `https://zane-christening.vercel.app/i/K7M2QX9P`.
+   `https://eli-invitation.vercel.app/i/K7M2QX9P`.
 
 Added more guests later? Type them in and run **3. Generate codes & links** again. Old links never change.
 
@@ -196,7 +175,7 @@ Added more guests later? Type them in and run **3. Generate codes & links** agai
 
 1. Add a test row in **Guests**: Name `Test Bear`, Type `Guest`, Max Guests `2`. Run **3. Generate codes & links**.
 2. Open Test Bear's link **on your phone**. Check:
-   * the envelope says **For Test Bear**, and tapping the seal opens it;
+   * the envelope says **To Test Bear**, and tapping the envelope opens it;
    * the RSVP section says **2 seats** are reserved.
 3. Choose **Joyfully attending**, pick **2 people**, type a companion name, and tap **Confirm My Attendance**.
    You should see **"Thank you, Test Bear! Your RSVP has been saved."**
@@ -213,7 +192,7 @@ Added more guests later? Type them in and run **3. Generate codes & links** agai
 Copy each guest's link from column H. A message you can adapt:
 
 > Hi Tita Maria! 💕🧸 You're invited to Zane Emillienne's Christening on Sunday, December 6, 2026.
-> Please open your personal invitation and RSVP here: https://zane-christening.vercel.app/i/K7M2QX9P
+> Please open your personal invitation and RSVP here: https://eli-invitation.vercel.app/i/K7M2QX9P
 > Kindly reply by November 22. Thank you!
 
 Send each person **their own** link only, because anyone with a link can answer for that invitation.
@@ -227,14 +206,14 @@ but asks people to use their personal link to RSVP.
 * **Head-count:** open the **Summary** tab. *Still waiting on* lists who hasn't answered yet.
 * **Give someone more seats:** change their **Max Guests** number in **Guests**.
 * **Change text or photos on the site:** edit `src/config/event.ts` (photos are in `public/images/`), then
-  run `npx vercel --prod` again.
+  commit and push to GitHub. Vercel republishes automatically in a minute or two.
 * **Diaper size update:** same as above, using the `Size:` line in the gift guide.
 
 ## Troubleshooting
 
 | What you see | What to do |
 | --- | --- |
-| RSVP says **"RSVP opens soon"** | Step 4 isn't finished. Check both variable names are spelled exactly, then run `npx vercel --prod`. |
+| RSVP says **"RSVP opens soon"** | Step 4 isn't finished. Check both variable names are spelled exactly, then **Redeploy** in Vercel. |
 | **"We couldn't load your personal invitation details"** | The script URL or secret is wrong, or **Who has access** isn't **Anyone**. Redo 3e/3f and Step 4. |
 | **"We couldn't find this invitation"** | The code in the link doesn't match column A. Copy the link again from column H. |
 | You changed `Code.gs` and nothing changed | In Apps Script: **Deploy → Manage deployments → ✏️ → Version: New version → Deploy**. |

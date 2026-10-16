@@ -32,7 +32,7 @@ npm run dev                  # http://localhost:3000
 1. Push this folder to a GitHub repository.
 2. In Vercel, click **Add New → Project** and import the repository. The defaults work.
 3. Add the environment variables from [`.env.example`](.env.example). See [`docs/SETUP.md`](docs/SETUP.md), Part B.
-4. Click **Deploy**. Redeploy after any environment variable change.
+4. Click **Deploy**. Redeploy (Deployments → ⋯ → Redeploy) after any environment variable change.
 
 ## Scripts
 
