@@ -97,10 +97,9 @@ export const event = {
     intro:
       "Your presence and prayers are the greatest gifts. Should you wish to bless Zane with something more, here are a few things she'll love:",
     items: [
-      /** TODO: update the diaper size closer to the date — babies grow fast! */
-      { icon: "diaper", title: "Rascals Diapers", detail: "Size: to follow" },
+      { icon: "diaper", title: "Rascals Diapers", detail: "Size: Large" },
       { icon: "wipes", title: "EQ Water Wipes", detail: "" },
-      { icon: "bottle", title: "Mustela Products", detail: "Diaper Rash Cream · Cleansing Water" },
+      { icon: "bottle", title: "Biolane Pure H2O Cleansing Water", detail: "" },
       { icon: "envelope", title: "Monetary Gifts", detail: "For Zane's future" },
     ],
     /**
