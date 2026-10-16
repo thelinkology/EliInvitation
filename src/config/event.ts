@@ -9,7 +9,7 @@
 export const event = {
   babyName: "Zane Emillienne",
   /** The invitation's public address. Used for link previews when the link is shared. */
-  siteUrl: "https://babyeli.link-ui.com",
+  siteUrl: "https://eli.link-ui.com",
   babyFirstName: "Zane",
   /** "her" or "him" — used in sentences like "welcoming her into the family of God". */
   babyPronoun: "her" as "her" | "him",

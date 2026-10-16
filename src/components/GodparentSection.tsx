@@ -14,6 +14,7 @@ export function GodparentSection({ name, ...response }: GodparentResponseProps &
 
   return (
     <Panel
+      id="godparent"
       labelledBy="godparent-title"
       tone="yellow"
       className="pb-20"

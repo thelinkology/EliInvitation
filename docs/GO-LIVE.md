@@ -64,7 +64,7 @@ The code lives on GitHub at <https://github.com/thelinkology/EliInvitation>. Ver
    change **Project Name** (e.g. `eli-invitation`); it becomes your web address.
 5. Click **Deploy** and wait 1–3 minutes. You'll see confetti and a preview of the site.
 6. Click **Continue to Dashboard**. Your live address is shown under **Domains**, for example
-   **https://babyeli.link-ui.com**. Open it on your phone. The invitation should work; the RSVP will
+   **https://eli.link-ui.com**. Open it on your phone. The invitation should work; the RSVP will
    say "RSVP opens soon" until Step 4.
 
 From now on, every change pushed to the `main` branch on GitHub is published automatically.
@@ -168,12 +168,12 @@ There are two shareable links. Anyone who opens them types their own name when t
 
 | Link | Who it's for | What's on it |
 | --- | --- | --- |
-| `https://babyeli.link-ui.com/` | All guests | The invitation and the RSVP |
-| `https://babyeli.link-ui.com/ninong-ninang` | Ninongs and Ninangs | Everything above, plus **"Will you be my Ninong or Ninang?"** with its own answer, and a separate attendance RSVP |
+| `https://eli.link-ui.com/` | All guests | The invitation and the RSVP |
+| `https://eli.link-ui.com/ninong-ninang` | Ninongs and Ninangs | Everything above, plus **"Will you be my Ninong or Ninang?"** with its own answer, and a separate attendance RSVP |
 
 Optional extras you can add to either link (they only change the greeting, nothing else):
 
-* `?to=Tita%20Maria` adds "Dear Tita Maria" — e.g. `https://babyeli.link-ui.com/ninong-ninang?to=Tita%20Maria`
+* `?to=Tita%20Maria` adds "Dear Tita Maria" — e.g. `https://eli.link-ui.com/ninong-ninang?to=Tita%20Maria`
 * `&role=ninang` (or `ninong`) on the godparent link changes the title to just **"Will you be my Ninang?"**
 
 Answers from these links appear in the **Responses** tab with **(shared link)** in the Code column. If someone
@@ -185,10 +185,10 @@ If you'd rather give certain guests a fixed number of seats, add them to the **G
 links (their RSVP shows their name and seat count automatically):
 
 1. In the Sheet, click **Invitation → 2. Set website address** and paste your site address,
-   `https://babyeli.link-ui.com`, then click **OK**.
+   `https://eli.link-ui.com`, then click **OK**.
 2. Click **Invitation → 3. Generate codes & links**.
 3. Column **H — Invitation Link** now has a personal link for every guest, like
-   `https://babyeli.link-ui.com/i/K7M2QX9P`.
+   `https://eli.link-ui.com/i/K7M2QX9P`.
 
 Added more guests later? Type them in and run **3. Generate codes & links** again. Old links never change.
 
@@ -198,10 +198,10 @@ Added more guests later? Type them in and run **3. Generate codes & links** agai
 
 **Shared links**
 
-1. Open `https://babyeli.link-ui.com/` on your phone, scroll to **RSVP**, type the name `Test Bear`, choose
+1. Open `https://eli.link-ui.com/` on your phone, scroll to **RSVP**, type the name `Test Bear`, choose
    **Joyfully attending**, and send. You should see **"Your RSVP has been saved."**
 2. In the Sheet, **Responses** has a row with **(shared link)** and **Test Bear**.
-3. Open `https://babyeli.link-ui.com/ninong-ninang`, answer **"Will you be my Ninong or Ninang?"** as
+3. Open `https://eli.link-ui.com/ninong-ninang`, answer **"Will you be my Ninong or Ninang?"** as
    `Test Ninang`, then RSVP below — the name is already filled in. Both answers land on the same row.
 4. Delete the test rows from **Responses** and **Log**.
 
@@ -226,11 +226,11 @@ Added more guests later? Type them in and run **3. Generate codes & links** agai
 Messages you can adapt:
 
 > **Guests:** Hi! 💕🧸 You're invited to Zane Emillienne's Christening on Sunday, December 6, 2026.
-> Please open the invitation and RSVP here: https://babyeli.link-ui.com/
+> Please open the invitation and RSVP here: https://eli.link-ui.com/
 > Kindly reply by November 8. Thank you!
 
 > **Ninongs & Ninangs:** Hi Tita Maria! 💕🧸 Zane has a very special question for you:
-> https://babyeli.link-ui.com/ninong-ninang?to=Tita%20Maria
+> https://eli.link-ui.com/ninong-ninang?to=Tita%20Maria
 > Kindly reply by November 8. Thank you!
 
 If you use personal links, copy each one from column H and send each person **their own** link only, because

@@ -12,7 +12,7 @@ import { SaveTheDate } from "@/components/SaveTheDate";
 import { ScrollFx } from "@/components/ScrollFx";
 import { event, rsvpDeadlineLabel } from "@/config/event";
 import { formLink, rsvpMode, type RsvpMode } from "@/config/rsvp";
-import type { GodparentRole, Invite } from "@/lib/invite";
+import { godparentAddress, type GodparentRole, type Invite } from "@/lib/invite";
 
 export type InvitationViewProps = {
   /** Verified invitation from the Google Sheet, if any. */
@@ -31,6 +31,8 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
   const isGodparent = invite ? invite.type === "godparent" : (convenience?.isGodparent ?? false);
   const role = invite?.role || convenience?.role || "";
   const roleLabel = role || "Ninong or Ninang";
+  // "Ninong Jaypee" — how the baby addresses this godparent.
+  const address = isGodparent ? godparentAddress(name, role) : undefined;
 
   const configured: RsvpMode = rsvpMode();
   const mode: RsvpMode = forceFormMode && configured === "live" ? "form" : configured;
@@ -38,7 +40,7 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
 
   return (
     <>
-      <Envelope recipient={name} isGodparent={isGodparent} />
+      <Envelope recipient={address ?? name} isGodparent={isGodparent} role={role} />
 
       <ScrollFx />
 
@@ -49,12 +51,17 @@ export function InvitationView({ invite, convenience, notice, forceFormMode }: I
           </div>
         )}
 
-        <Hero greetingName={name} />
+        <Hero
+          greetingName={name}
+          godparent={
+            isGodparent ? { address, roleLabel, accepted: invite?.godparent ? invite.godparent.accepted : null } : undefined
+          }
+        />
         <CountdownPanel />
 
         {isGodparent && (
           <GodparentSection
-            name={name}
+            name={address ?? name}
             mode={mode}
             invite={invite ? { code: invite.code, godparent: invite.godparent } : null}
             roleLabel={roleLabel}

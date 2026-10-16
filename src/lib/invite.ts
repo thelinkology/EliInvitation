@@ -143,3 +143,18 @@ export function validateSubmission(input: unknown): ValidationResult {
 
   return { ok: true, value: { ...who, action: "rsvp", attending: true, guestCount, companions, message } };
 }
+
+const HONORIFICS = new Set(["tito", "tita", "ate", "kuya", "lolo", "lola", "mr", "mrs", "ms", "dr", "sir", "ma'am"]);
+
+/**
+ * How the baby addresses a godparent: "Jaypee Hernandez" + "Ninong" → "Ninong Jaypee".
+ * A leading Tito/Tita/Ate/Kuya… is skipped ("Tita Maria Cruz" → "Ninang Maria").
+ * Without a role, the name is returned as typed.
+ */
+export function godparentAddress(name: string | undefined, role: GodparentRole): string | undefined {
+  if (!name) return undefined;
+  if (!role) return name;
+  const words = name.trim().split(/\s+/);
+  const skip = words.length > 1 && HONORIFICS.has(words[0].toLowerCase().replace(/\.$/, "")) ? 1 : 0;
+  return `${role} ${words[skip]}`;
+}

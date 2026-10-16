@@ -52,7 +52,16 @@ export const OPEN_EVENT = "invitation:open";
  * the bow and lets the ribbon fall away, glides the card out, and reveals the
  * invitation underneath.
  */
-export function Envelope({ recipient, isGodparent }: { recipient?: string; isGodparent?: boolean }) {
+export function Envelope({
+  recipient,
+  isGodparent,
+  role = "",
+}: {
+  recipient?: string;
+  isGodparent?: boolean;
+  /** "Ninong" or "Ninang" for a godparent invitation, if known. */
+  role?: string;
+}) {
   const [state, setState] = useState<State>("closed");
   const ribbonRef = useRef<SVGSVGElement>(null);
 
@@ -150,9 +159,19 @@ export function Envelope({ recipient, isGodparent }: { recipient?: string; isGod
               <StarGlyph className="absolute top-[12%] left-[46%] h-2.5 w-2.5 text-gold-400" />
               <StarGlyph className="absolute top-[40%] right-[24%] h-3 w-3 text-gold-400" />
               <span className="absolute inset-x-0 top-[30%] text-center font-script text-[2.6rem] leading-[0.95] text-rose-600 sm:text-5xl">
-                You&rsquo;re
-                <br />
-                invited!
+                {isGodparent ? (
+                  <>
+                    Be my
+                    <br />
+                    {role || "Godparent"}?
+                  </>
+                ) : (
+                  <>
+                    You&rsquo;re
+                    <br />
+                    invited!
+                  </>
+                )}
               </span>
               <BearFace bow className="absolute bottom-[4%] left-[6%] w-[20%]" />
             </span>
