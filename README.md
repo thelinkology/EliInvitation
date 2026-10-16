@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Christening Invitation
 
-## Getting Started
+A personalized, mobile-first christening invitation built with Next.js 16, TypeScript and Tailwind CSS, hosted on Vercel.
+RSVPs are stored in Google Sheets, through Google Apps Script. Google Forms is an optional backup.
 
-First, run the development server:
+* `/` is the shared invitation. Optional `?to=Name&type=godparent&role=ninang` personalizes the greeting only.
+* `/i/<code>` is a personal invitation. It is looked up in the Google Sheet on the server.
+* `/api/rsvp` receives RSVP and godparent answers and forwards them to Apps Script.
+
+**New to this? Start with [`docs/GO-LIVE.md`](docs/GO-LIVE.md)**, a step-by-step guide from your computer to a live link.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in values — see docs/SETUP.md
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | File |
+| --- | --- |
+| Baby's name, date, venues, attire, reminders, photos | [`src/config/event.ts`](src/config/event.ts) |
+| RSVP settings (reads environment variables) | [`src/config/rsvp.ts`](src/config/rsvp.ts) |
+| Google Sheet backend (paste into Apps Script) | [`apps-script/Code.gs`](apps-script/Code.gs) |
+| Step-by-step Google + Vercel setup | [`docs/SETUP.md`](docs/SETUP.md) |
+| Photos | `public/images/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy to Vercel
 
-## Learn More
+1. Push this folder to a GitHub repository.
+2. In Vercel, click **Add New → Project** and import the repository. The defaults work.
+3. Add the environment variables from [`.env.example`](.env.example). See [`docs/SETUP.md`](docs/SETUP.md), Part B.
+4. Click **Deploy**. Redeploy after any environment variable change.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`npm run dev` · `npm run build` · `npm run start` · `npm run lint` · `npx tsc --noEmit`

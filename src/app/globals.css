@@ -1,26 +1,493 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Yellow & baby-pink teddy-bear palette. */
+  --color-cream: #fffaf0;
+  --color-paper: #fffefa;
+  --color-blush-50: #fff5f8;
+  --color-blush-100: #ffe8ef;
+  --color-blush-200: #fbd3df;
+  --color-blush-300: #f6b9cb;
+  --color-rose-400: #ee9ab3;
+  --color-rose-500: #d8708f;
+  /* Pink text and buttons: deep enough for ≥ 4.5:1 contrast. */
+  --color-rose-600: #b04d6c;
+  --color-butter-50: #fffbea;
+  --color-butter-100: #fff3c9;
+  --color-butter-200: #fde7a2;
+  --color-butter-300: #f8d76f;
+  --color-butter-400: #f1c34c;
+  --color-gold-300: #f0d999;
+  --color-gold-400: #e0b85c;
+  --color-gold-500: #c9993a;
+  /* Small honey-gold text: darker so it stays readable (≥ 4.5:1 on cream). */
+  --color-gold-700: #86601a;
+  --color-bear-200: #f1dcc3;
+  --color-bear-300: #e3c29c;
+  --color-bear-400: #cfa178;
+  --color-bear-500: #b07f58;
+  --color-bear-700: #6b4a35;
+  --color-ink: #5a3f36;
+  --color-ink-soft: #75594f;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-cocoa: #8b6a4f;
+  --font-script: var(--font-pinyon), "Brush Script MT", cursive;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 3.5s linear infinite;
+  --animate-sway: sway 5s ease-in-out infinite;
+  --animate-spin-slow: spin 6s linear infinite;
+  --animate-wave: wave 1.1s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.7) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(20deg); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% center; }
+    to { background-position: -200% center; }
+  }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Soft sky wash used behind the hero and envelope. */
+.sky-wash {
+  background:
+    radial-gradient(120% 70% at 50% 0%, #ffdfe9 0%, rgba(255, 223, 233, 0) 60%),
+    radial-gradient(90% 60% at 0% 45%, #ffeba8 0%, rgba(255, 235, 168, 0) 60%),
+    radial-gradient(90% 60% at 100% 65%, #fff0bd 0%, rgba(255, 240, 189, 0) 55%),
+    var(--color-cream);
+}
+
+/* Fine paper grain. */
+.paper {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(rgba(216, 112, 143, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(224, 184, 92, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px, 26px 26px;
+  background-position: 0 0, 9px 13px;
+}
+
+/* Champagne-gold foil text. */
+.gold-foil {
+  background: linear-gradient(100deg, #9a6f1c 0%, #d9a93f 25%, #a87a22 45%, #e6c06a 60%, #9a6f1c 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft gingham used on accents (bear theme). */
+.gingham-pink {
+  background-color: #fff3f7;
+  background-image:
+    linear-gradient(90deg, rgba(246, 185, 203, 0.45) 50%, transparent 50%),
+    linear-gradient(rgba(246, 185, 203, 0.45) 50%, transparent 50%);
+  background-size: 16px 16px;
+}
+.gingham-yellow {
+  background-color: #fffbea;
+  background-image:
+    linear-gradient(90deg, rgba(248, 215, 111, 0.4) 50%, transparent 50%),
+    linear-gradient(rgba(248, 215, 111, 0.4) 50%, transparent 50%);
+  background-size: 16px 16px;
+}
+
+/* Scalloped bottom edge, like a baby blanket. */
+.scallop-bottom {
+  -webkit-mask: radial-gradient(14px at 50% calc(100% - 14px), #000 98%, transparent) 50% / 28px 100% repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - 14px) no-repeat;
+  mask: radial-gradient(14px at 50% calc(100% - 14px), #000 98%, transparent) 50% / 28px 100% repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - 14px) no-repeat;
+}
+
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
+}
+
+/* Scroll reveal (see components/Reveal.tsx). Works in every browser via IntersectionObserver. */
+[data-reveal] {
+  transition:
+    opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.4s ease,
+    letter-spacing 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal="hidden"] {
+  opacity: 0;
+}
+[data-reveal="hidden"][data-variant="up"] {
+  transform: translateY(44px);
+}
+[data-reveal="hidden"][data-variant="zoom"] {
+  transform: scale(0.9);
+  filter: blur(6px);
+}
+[data-reveal="hidden"][data-variant="left"] {
+  transform: translateX(-48px) rotate(-3deg);
+}
+[data-reveal="hidden"][data-variant="right"] {
+  transform: translateX(48px) rotate(3deg);
+}
+[data-reveal="hidden"][data-variant="pop"] {
+  transform: scale(0.4) rotate(-12deg);
+}
+[data-reveal="shown"][data-variant="pop"] {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[data-reveal="hidden"][data-variant="title"] {
+  transform: translateY(14px);
+  filter: blur(4px);
+}
+[data-reveal][data-variant="title"] .title-track {
+  transition: letter-spacing 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal="hidden"][data-variant="title"] .title-track {
+  letter-spacing: 0.2em;
+}
+
+/* Scroll-linked motion — progressive enhancement for browsers with scroll timelines. */
+@supports (animation-timeline: scroll()) {
+  /* Decorations drift slower than the content for a gentle depth effect. */
+  .decor-parallax {
+    animation: decor-drift linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  @keyframes decor-drift {
+    from { transform: translateY(36px); }
+    to { transform: translateY(-36px); }
+  }
+
+  /* Photos ease out of a slight zoom as they pass through the screen. */
+  .photo-drift {
+    animation: photo-drift linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 60%;
+  }
+  @keyframes photo-drift {
+    from { transform: scale(1.18) translateY(4%); }
+    to { transform: scale(1) translateY(0); }
+  }
+
+  /* The arched window opens up as each panel arrives. */
+  .arch-grow {
+    animation: arch-grow linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+  @keyframes arch-grow {
+    from { transform: scaleX(0.86) translateY(30px); opacity: 0.2; }
+    to { transform: none; opacity: 1; }
+  }
+}
+
+/* Page backdrop: the invitation is a column of panels over soft gingham. */
+.page-backdrop {
+  background-color: #fff3f6;
+  background-image:
+    linear-gradient(90deg, rgba(251, 211, 223, 0.35) 50%, transparent 50%),
+    linear-gradient(rgba(253, 231, 162, 0.3) 50%, transparent 50%);
+  background-size: 28px 28px;
+}
+
+/* Panel frame with concave (notched) corners, as on printed invitation cards. */
+.notched {
+  --r: 22px;
+  -webkit-mask:
+    radial-gradient(var(--r) at 0 0, #0000 98%, #000) top left,
+    radial-gradient(var(--r) at 100% 0, #0000 98%, #000) top right,
+    radial-gradient(var(--r) at 0 100%, #0000 98%, #000) bottom left,
+    radial-gradient(var(--r) at 100% 100%, #0000 98%, #000) bottom right;
+  -webkit-mask-size: 51% 51%;
+  -webkit-mask-repeat: no-repeat;
+  mask:
+    radial-gradient(var(--r) at 0 0, #0000 98%, #000) top left,
+    radial-gradient(var(--r) at 100% 0, #0000 98%, #000) top right,
+    radial-gradient(var(--r) at 0 100%, #0000 98%, #000) bottom left,
+    radial-gradient(var(--r) at 100% 100%, #0000 98%, #000) bottom right;
+  mask-size: 51% 51%;
+  mask-repeat: no-repeat;
+}
+
+/* Fine paper fibres for the envelope. */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.3 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Grosgrain ribbon band. */
+.grosgrain {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px 4px),
+    linear-gradient(#f9c4d4, #f2a5bd 55%, #e690ac);
+}
+
+/* Envelope (see components/Envelope.tsx).
+   Intro (on load): the envelope arrives closed, the flap lifts slowly, then the card peeks out.
+   Opening (on tap): closed → untie (seal lifts, tag drops, bow unties, ribbon slides away)
+                     → rise (card glides out) → leaving (screen fades). */
+.envelope {
+  perspective: 1300px;
+}
+.env-flap-front {
+  transform-origin: top center;
+  animation: env-flap-front 1.3s cubic-bezier(0.45, 0, 0.55, 1) 1.2s both;
+}
+@keyframes env-flap-front {
+  from { transform: rotateX(0deg); opacity: 1; }
+  99% { opacity: 1; }
+  to { transform: rotateX(90deg); opacity: 0; }
+}
+.env-flap-back {
+  transform-origin: bottom center;
+  animation: env-flap-back 1.2s cubic-bezier(0.2, 0, 0.3, 1) 2.45s both;
+}
+@keyframes env-flap-back {
+  from { transform: rotateX(90deg); }
+  to { transform: rotateX(0deg); }
+}
+.env-card-peek {
+  animation: env-card-peek 2.6s cubic-bezier(0.22, 1, 0.36, 1) 3.2s both;
+}
+@keyframes env-card-peek {
+  from { translate: 0 60%; }
+  to { translate: 0 0; }
+}
+.env-hint {
+  animation: fade-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) 5s both;
+}
+
+/* 1 · The wax seal shudders, a crack appears, and the two halves tumble away. */
+.envelope:not([data-state="closed"]) .env-seal {
+  animation: seal-shudder 0.32s ease-in-out both;
+}
+@keyframes seal-shudder {
+  0%, 100% { transform: none; }
+  25% { transform: rotate(-4deg) scale(1.03); }
+  50% { transform: rotate(3deg) scale(1.03); }
+  75% { transform: rotate(-2deg); }
+}
+.env-crack {
+  opacity: 0;
+}
+.envelope:not([data-state="closed"]) .env-crack {
+  animation: seal-crack 0.2s ease-out 0.12s both;
+}
+@keyframes seal-crack {
+  from { opacity: 0; clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.envelope:not([data-state="closed"]) .env-seal-l {
+  transform-origin: 30% 80%;
+  animation: seal-fall-l 1.1s cubic-bezier(0.5, 0, 0.85, 0.4) 0.34s both;
+}
+.envelope:not([data-state="closed"]) .env-seal-r {
+  transform-origin: 70% 80%;
+  animation: seal-fall-r 1.15s cubic-bezier(0.5, 0, 0.85, 0.4) 0.38s both;
+}
+@keyframes seal-fall-l {
+  0% { transform: none; opacity: 1; }
+  18% { transform: translate(-8%, -4%) rotate(-10deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(-45%, 320%) rotate(-70deg); opacity: 0; }
+}
+@keyframes seal-fall-r {
+  0% { transform: none; opacity: 1; }
+  18% { transform: translate(8%, -4%) rotate(10deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(40%, 300%) rotate(64deg); opacity: 0; }
+}
+
+.env-card {
+  transition: transform 2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.envelope[data-state="rise"] .env-card,
+.envelope[data-state="leaving"] .env-card {
+  transform: translateY(-32%) scale(1.05);
+}
+.env-body {
+  transition: transform 2s cubic-bezier(0.22, 1, 0.36, 1), opacity 2s ease;
+}
+.envelope[data-state="rise"] .env-body,
+.envelope[data-state="leaving"] .env-body {
+  transform: translateY(16%);
+  opacity: 0.8;
+}
+
+/* Text and small details fade up slowly as they scroll in (ScrollFx). */
+.fx-text[data-fx="in"] {
+  animation: fx-text 1.5s cubic-bezier(0.22, 1, 0.36, 1) var(--fx-delay, 0s) both;
+}
+@keyframes fx-text {
+  from { opacity: 0; transform: translateY(36px); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* Hearts, stars and balloons drifting upward in the background. */
+.float-up {
+  animation: float-up var(--dur, 12s) ease-in-out var(--delay, 0s) infinite;
+}
+@keyframes float-up {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  12% { opacity: var(--peak, 0.8); }
+  50% { transform: translate(16px, calc(var(--rise, 520px) * -0.5)) rotate(8deg); }
+  85% { opacity: calc(var(--peak, 0.8) * 0.8); }
+  100% { transform: translate(-12px, calc(var(--rise, 520px) * -1)) rotate(-6deg); opacity: 0; }
+}
+
+/* Bows flutter softly, as if in a breeze. */
+.bow-flutter {
+  transform-origin: 50% 45%;
+  animation: bow-flutter 3.6s ease-in-out infinite;
+}
+@keyframes bow-flutter {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  30% { transform: rotate(-2.5deg) scale(1.03, 0.98); }
+  65% { transform: rotate(2deg) scale(0.98, 1.03); }
+}
+
+/* Decorative objects come alive as they scroll into view (see components/ScrollFx.tsx).
+   Each type has an entrance, and most keep a gentle idle motion afterwards. */
+.fx-ready .fx:not([data-fx="in"]) {
+  opacity: 0;
+}
+.fx-d1 { --fx-delay: 0.15s; }
+.fx-d2 { --fx-delay: 0.3s; }
+.fx-d3 { --fx-delay: 0.45s; }
+
+.fx-balloon[data-fx="in"] {
+  transform-origin: 50% 100%;
+  animation:
+    fx-rise 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--fx-delay, 0s) both,
+    fx-bob 4.5s ease-in-out calc(var(--fx-delay, 0s) + 1.6s) infinite alternate;
+}
+@keyframes fx-rise {
+  from { opacity: 0; transform: translateY(110px) scale(0.85); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fx-bob {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(-18px) rotate(3deg); }
+}
+
+.fx-teddy[data-fx="in"] {
+  transform-origin: 50% 100%;
+  animation:
+    fx-hop 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) var(--fx-delay, 0s) both,
+    fx-wiggle 3.4s ease-in-out calc(var(--fx-delay, 0s) + 1.1s) infinite alternate;
+}
+@keyframes fx-hop {
+  0% { opacity: 0; transform: translateY(60px) scale(0.6) rotate(-14deg); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes fx-wiggle {
+  from { transform: rotate(-4deg) translateY(0); }
+  to { transform: rotate(4deg) translateY(-4px); }
+}
+
+.fx-flower[data-fx="in"] {
+  transform-origin: 50% 100%;
+  animation:
+    fx-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) var(--fx-delay, 0s) both,
+    fx-sway 5s ease-in-out calc(var(--fx-delay, 0s) + 1.5s) infinite alternate;
+}
+@keyframes fx-grow {
+  from { opacity: 0; transform: scale(0.4, 0.1); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fx-sway {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(4deg); }
+}
+
+.fx-blocks[data-fx="in"] {
+  animation: fx-drop 1.1s cubic-bezier(0.34, 1.45, 0.64, 1) var(--fx-delay, 0s) both;
+}
+@keyframes fx-drop {
+  from { opacity: 0; transform: translateY(-80px) rotate(-10deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.fx-pop[data-fx="in"] {
+  transform-origin: 50% 100%;
+  animation:
+    fx-pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) var(--fx-delay, 0s) both,
+    fx-hop-idle 4s ease-in-out calc(var(--fx-delay, 0s) + 0.9s) infinite;
+}
+@keyframes fx-pop {
+  from { opacity: 0; transform: scale(0.2) rotate(-10deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fx-hop-idle {
+  0%, 78%, 100% { transform: none; }
+  86% { transform: translateY(-8px) rotate(-3deg); }
+  93% { transform: translateY(0) rotate(2deg); }
+}
+
+.fx-cross[data-fx="in"] {
+  animation: fx-glow 1.6s ease var(--fx-delay, 0s) both;
+}
+@keyframes fx-glow {
+  0% { opacity: 0; transform: translateY(-18px); filter: drop-shadow(0 0 0 rgba(255, 214, 120, 0)); }
+  60% { opacity: 1; filter: drop-shadow(0 0 12px rgba(255, 214, 120, 0.95)); }
+  100% { opacity: 1; transform: none; filter: drop-shadow(0 0 0 rgba(255, 214, 120, 0)); }
+}
+
+.fx-slide-r[data-fx="in"] {
+  animation: fx-slide-r 1.2s cubic-bezier(0.22, 1, 0.36, 1) var(--fx-delay, 0s) both;
+}
+@keyframes fx-slide-r {
+  from { opacity: 0; transform: translateX(80px) rotate(10deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* People who ask their device for less motion still get the gentle fades, the
+   envelope and small idle movements; only scroll-linked parallax and zoom are
+   removed, as those are what most often cause discomfort. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .decor-parallax,
+  .photo-drift {
+    animation: none !important;
+  }
 }
